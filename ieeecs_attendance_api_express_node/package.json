@@ -1,0 +1,22 @@
+{
+  "name": "ieeecs_attendance_api_express_node",
+  "version": "1.0.0",
+  "description": "Restful api using Express and Node for demonstration at the first meeting of IEEE-CS Fall 218",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -w server server/server.js"
+  },
+  "author": "Hart",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongodb": "^3.1.6",
+    "react": "^16.5.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3",
+    "open": "0.0.5"
+  }
+}
