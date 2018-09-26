@@ -1,3 +1,4 @@
+const { MONGODB_URI } = require('../env');
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
@@ -8,8 +9,8 @@ const port = 3000;
 
 app.use(bodyParser.json())
 
-MongoClient.connect('mongodb://localhost/').then(client => {
-	return client.db('IEEECS_Attendance');
+MongoClient.connect(MONGODB_URI).then(client => {
+	return client.db();
 }).then(connection => {
 	db = connection;
 	app.listen(port, () => {
