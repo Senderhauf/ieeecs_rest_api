@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use(bodyParser.json())
 
-MongoClient.connect('mongodb://localhost/').then(client => {
+MongoClient.connect(process.env.MONGODB_URI || 'mongodb://localhost/').then(client => {
 	return client.db('IEEECS_Attendance');
 }).then(connection => {
 	db = connection;

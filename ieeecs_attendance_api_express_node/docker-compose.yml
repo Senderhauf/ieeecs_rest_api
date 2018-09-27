@@ -1,0 +1,16 @@
+version: "2"
+services:
+  mongo:
+    restart: always
+    build: ./mongo
+    volumes:
+      - /tmp/mongo:/data/db
+  rest:
+    restart: always
+    build: .
+    environment:
+      MONGODB_URI: "mongodb://mongo/IEEECS_Announcements"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
