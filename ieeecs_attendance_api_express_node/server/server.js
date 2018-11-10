@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const middleWare = require('express-list-middleware');
+const verifyPost = require('./verifyPost.js');
 
 let db;
 const app = express();
@@ -17,6 +19,7 @@ app.use(bodyParser.json())
 MongoClient.connect(process.env.MONGODB_URI || 'mongodb://localhost/').then(client => {
 	return client.db('IEEECS_Attendance');
 }).then(connection => {
+	console.log(middleWare());
 	db = connection;
 	app.listen(port, () => {
 		console.log('App started on port ' + port);
@@ -90,15 +93,23 @@ app.post('/api/attendance', (req, res) => {
     const newCheckIn = req.body;
 
     console.log(`\nreq.body = ${req.body.params}\n`)
-
-    newCheckIn.date = new Date();
-    // newCheckIn.year = newCheckIn.year;
-    // newCheckIn.month = newCheckIn.month;
-    // newCheckIn.day = newCheckIn.day;
      
-    console.log(newCheckIn);
+	//console.log(newCheckIn);
+	
+	const err = verifyPost(newCheckIn);
+	if(err) {
+		res.status(422).json({message: `Invalid request; ${err}`});
+		return;
+	}
 
-    db.collection('present_students').update({ePantherID:newCheckIn.ePantherID, year:Number(newCheckIn.year), month:Number(newCheckIn.month), day:Number(newCheckIn.day)}, newCheckIn, {upsert:true}).then(result => 
+	db.collection('present_students').update(
+			{
+				ePantherID:newCheckIn.ePantherID, 
+				year:Number(newCheckIn.year), 
+				month:Number(newCheckIn.month), 
+				day:Number(newCheckIn.day)
+			}, 
+			newCheckIn, {upsert:true}).then(result => 
         db.collection('present_students').find({_id: result.insertedId}).limit(1).next()
     ).then(newCheckIn => {
         res.json(newCheckIn);
